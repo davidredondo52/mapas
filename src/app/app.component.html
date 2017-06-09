@@ -1,3 +1,31 @@
-<h1>
-  {{title}}
-</h1>
+<app-navbar></app-navbar>
+<div class="container main-container">
+<div class="row">
+<div class="col-md-4">
+<h5>Marcador</h5>
+</div>
+<div class="col-md-8">
+<sebm-google-map [zoom]="zoom"
+                 [latitude]="lat" 
+                 [longitude]="lng"
+                 (mapClick)="clickMapa($event)">
+                 
+  <sebm-google-map-marker *ngFor="let marcador of _mapService.marcadores"
+                          [latitude]="marcador.lat" 
+                          [longitude]="marcador.lng"
+                          [title]="marcador.titulo"
+                          [markerDraggable]="marcador.draggable">
+  	<sebm-google-map-info-window>
+        <strong>{{marcador.titulo}}</strong>
+        <p *ngIf="marcador.desc">
+        {{marcador.desc}}
+        </p> 
+    </sebm-google-map-info-window>
+
+  </sebm-google-map-marker>
+</sebm-google-map>
+</div>
+</div>
+</div>
+
+
