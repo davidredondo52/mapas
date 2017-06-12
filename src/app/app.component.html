@@ -2,24 +2,75 @@
 <div class="container main-container">
 <div class="row">
 <div class="col-md-4">
-<h5>Marcador</h5>
+    
+    <div *ngIf="!marcadorSel">
+    <div class="alert alert-info animated fadeIn fast">
+    <strong>Haga Click</strong> en el mapa para crear un marcador, o seleccione uno
+    </div>
+    </div>
+
+    <div *ngIf="marcadorSel" class="animated fadeIn fast">
+    <h5>Marcador</h5>
+    <hr>
+
+    <div class="form-group">
+      
+      <label>Título</label>
+      <input 
+          [(ngModel)]="marcadorSel.titulo"
+          type="text" 
+          name="titulo"
+          class="form-control">
+      </div>
+    
+
+    <div class="form-group">
+      
+      <label>Descripción</label>
+      <textarea
+          [(ngModel)]="marcadorSel.desc"
+          type="text" 
+          name="desc"
+          class="form-control"
+          rows="5"></textarea> 
+      </div>
+      <div class="form-group">
+      <label>¿Se puede mover?</label>
+      <select [(ngModel)]="draggable"
+             class="form-control"
+             name="draggable"
+             (change)="cambiarDraggable()">
+             <option value="1">Si</option>
+             <option value="0">No</option>
+        
+      </select>
+      </div>
+    <button (click)="_mapService.guardarMarcadores()"
+    class="btn btn-outline-primary form-control">Guardar</button>
 </div>
-<div class="col-md-8">
+</div>
+<div class="col-md-8 animated fadeIn fast">
 <sebm-google-map [zoom]="zoom"
                  [latitude]="lat" 
                  [longitude]="lng"
                  (mapClick)="clickMapa($event)">
                  
-  <sebm-google-map-marker *ngFor="let marcador of _mapService.marcadores"
+  <sebm-google-map-marker *ngFor="let marcador of _mapService.marcadores;let i=index"
                           [latitude]="marcador.lat" 
                           [longitude]="marcador.lng"
                           [title]="marcador.titulo"
-                          [markerDraggable]="marcador.draggable">
+                          [markerDraggable]="marcador.draggable"
+                          (markerClick)="clickMarcador(marcador,i)"
+                          (dragEnd)="dragEndMarcador(marcador,$event)">
   	<sebm-google-map-info-window>
         <strong>{{marcador.titulo}}</strong>
         <p *ngIf="marcador.desc">
         {{marcador.desc}}
         </p> 
+        <p>
+        <a (click)="borrarMarcador(i)"
+        class="text-danger puntero">Borrar marcador</a>
+        </p>
     </sebm-google-map-info-window>
 
   </sebm-google-map-marker>
